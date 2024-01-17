@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Observation
 
+@Observable
 class TodoItem: Identifiable {
     
     let id = UUID()

@@ -7,7 +7,9 @@
 
 import Foundation
 
-class TodoItem {
+class TodoItem: Identifiable {
+    
+    let id = UUID()
     var details: String
     let createdOn: Date
     var isCompleted: Bool

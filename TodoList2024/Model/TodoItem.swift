@@ -9,7 +9,7 @@ import Foundation
 
 class TodoItem {
     var details: String
-    var createdOn: Date
+    let createdOn: Date
     var isCompleted: Bool
     var completedOn: Date?
 

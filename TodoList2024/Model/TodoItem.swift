@@ -21,7 +21,7 @@ class TodoItem {
         details: String,
         createdOn: Date = Date(),
         isCompleted: Bool = false,
-        completedOn: Date?
+        completedOn: Date? = nil
     ) {
         self.details = details
         self.createdOn = createdOn

@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import Observation
+import SwiftData
 
-@Observable
+@Model
 class TodoItem: Identifiable {
     
-    let id = UUID()
     var details: String
     let createdOn: Date
     var isCompleted: Bool

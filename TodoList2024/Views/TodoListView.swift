@@ -5,6 +5,7 @@
 //  Created by Russell Gordon on 2024-01-17.
 //
 
+import SwiftData
 import SwiftUI
 
 struct TodoListView: View {
@@ -19,8 +20,11 @@ struct TodoListView: View {
     // The item currently being created
     @State private var newItemDetails = ""
     
-    // Our list of items to complete
-    @State private var items: [TodoItem] = []
+    // Access the model context (required to do additions, deletions, updates, et cetera)
+    @Environment(\.modelContext) private var modelContext
+    
+    // Fetch all items to show into memory
+    @Query private var items: [TodoItem]
     
     // Keeps track of what has the focus
     @FocusState private var currentControl: InputControls?
@@ -88,7 +92,7 @@ struct TodoListView: View {
     // MARK: Functions
     func addItem() {
         let newToDoItem = TodoItem(details: newItemDetails)
-        items.insert(newToDoItem, at: 0)
+        modelContext.insert(newToDoItem)
         newItemDetails = ""
     }
     
@@ -104,7 +108,9 @@ struct TodoListView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        items.remove(atOffsets: offsets)
+        for offset in offsets {
+            modelContext.delete(items[offset])
+        }
     }
  
 }

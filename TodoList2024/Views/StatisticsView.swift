@@ -124,9 +124,9 @@ struct StatisticsView: View {
 
 #Preview {
     LandingView()
-        .modelContainer(TodoItem.emptyListPreview)
+        .modelContainer(TodoItem.preview)
 }
 #Preview {
     LandingView()
-        .modelContainer(TodoItem.preview)
+        .modelContainer(TodoItem.emptyListPreview)
 }

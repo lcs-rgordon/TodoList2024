@@ -29,19 +29,22 @@ struct TodoListView: View {
                     Button("Add") {
                         addItem()
                     }
-
+                    
                 }
                 .padding(20)
                 
-                List(items) { currentItem in
-                    Label {
-                        Text(currentItem.details)
-                    } icon: {
-                        Image(systemName: currentItem.isCompleted ? "checkmark.circle" : "circle")
-                            .onTapGesture {
-                                toggle(item: currentItem)
-                            }
+                List {
+                    ForEach(items) { currentItem in
+                        Label {
+                            Text(currentItem.details)
+                        } icon: {
+                            Image(systemName: currentItem.isCompleted ? "checkmark.circle" : "circle")
+                                .onTapGesture {
+                                    toggle(item: currentItem)
+                                }
+                        }
                     }
+                    .onDelete(perform: delete)
                 }
             }
             .navigationTitle("To do")
@@ -63,6 +66,10 @@ struct TodoListView: View {
             item.isCompleted = true
         }
         
+    }
+    
+    func delete(at offsets: IndexSet) {
+        items.remove(atOffsets: offsets)
     }
  
 }

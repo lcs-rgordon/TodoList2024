@@ -67,7 +67,7 @@ struct TodoListView: View {
                             Label {
                                 Text(currentItem.details)
                             } icon: {
-                                Image(systemName: currentItem.isCompleted ? "checkmark.circle" : "circle")
+                                Image(systemName: currentItem.isCompleted == .yes ? "checkmark.circle" : "circle")
                                     .onTapGesture {
                                         toggle(item: currentItem)
                                     }
@@ -78,7 +78,7 @@ struct TodoListView: View {
                 }
                 
             }
-            .navigationTitle("To do")
+            .navigationTitle("Tasks")
             // Both seem to be necessary to get the input field to take focus
             .onAppear {
                 currentControl = .todoItemEntry
@@ -97,12 +97,12 @@ struct TodoListView: View {
     }
     
     func toggle(item: TodoItem) {
-        if item.isCompleted {
+        if item.isCompleted == .yes {
             item.completedOn = nil
-            item.isCompleted = false
+            item.isCompleted = .no
         } else {
             item.completedOn = Date()
-            item.isCompleted = true
+            item.isCompleted = .yes
         }
         
     }

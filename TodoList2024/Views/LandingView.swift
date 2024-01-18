@@ -8,19 +8,22 @@
 import SwiftUI
 
 struct LandingView: View {
+    
     var body: some View {
-        TabView {
+        TabView(selection: .constant(2)) {
             TodoListView()
                 .tabItem {
                     Text("Tasks")
                     Image(systemName: "checklist")
                 }
+                .tag(1)
             
             StatisticsView()
                 .tabItem {
                     Text("Stats")
                     Image(systemName: "chart.line.uptrend.xyaxis")
                 }
+                .tag(2)
         }
     }
 }

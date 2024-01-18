@@ -9,6 +9,10 @@ import SwiftUI
 
 struct TodoListView: View {
     
+    enum InputFields {
+        case todoItem
+    }
+    
     // MARK: Stored properties
     
     // The item currently being created
@@ -16,6 +20,9 @@ struct TodoListView: View {
     
     // Our list of items to complete
     @State private var items: [TodoItem] = []
+    
+    // Keeps track of what has the focus
+    @FocusState private var inputFields: InputFields?
     
     // MARK: Computed properties
     var body: some View {
@@ -25,6 +32,7 @@ struct TodoListView: View {
                 HStack {
                     
                     TextField("Enter a to-do item", text: $newItemDetails)
+                        .focused($inputFields, equals: .todoItem)
                     
                     Button("Add") {
                         addItem()
@@ -59,6 +67,9 @@ struct TodoListView: View {
                 
             }
             .navigationTitle("To do")
+            .onAppear {
+                inputFields = .todoItem
+            }
         }
     }
     

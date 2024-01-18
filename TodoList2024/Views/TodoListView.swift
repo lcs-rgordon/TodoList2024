@@ -9,8 +9,9 @@ import SwiftUI
 
 struct TodoListView: View {
     
-    enum InputFields {
-        case todoItem
+    enum InputControls {
+        case todoItemEntry
+        case todoItemCreation
     }
     
     // MARK: Stored properties
@@ -22,7 +23,7 @@ struct TodoListView: View {
     @State private var items: [TodoItem] = []
     
     // Keeps track of what has the focus
-    @FocusState private var inputFields: InputFields?
+    @FocusState private var currentControl: InputControls?
     
     // MARK: Computed properties
     var body: some View {
@@ -32,11 +33,18 @@ struct TodoListView: View {
                 HStack {
                     
                     TextField("Enter a to-do item", text: $newItemDetails)
-                        .focused($inputFields, equals: .todoItem)
+                        .focused($currentControl, equals: .todoItemEntry)
+                        .onKeyPress(.return) {
+                            addItem()
+                            return .handled
+                        }
                     
                     Button("Add") {
                         addItem()
                     }
+                    .focusable()
+                    .focused($currentControl, equals: .todoItemCreation)
+                    
                     
                 }
                 .padding(20)
@@ -67,8 +75,12 @@ struct TodoListView: View {
                 
             }
             .navigationTitle("To do")
+            // Both seem to be necessary to get the input field to take focus
             .onAppear {
-                inputFields = .todoItem
+                currentControl = .todoItemEntry
+            }
+            .task {
+                currentControl = .todoItemEntry
             }
         }
     }
@@ -77,6 +89,7 @@ struct TodoListView: View {
     func addItem() {
         let newToDoItem = TodoItem(details: newItemDetails)
         items.insert(newToDoItem, at: 0)
+        newItemDetails = ""
     }
     
     func toggle(item: TodoItem) {

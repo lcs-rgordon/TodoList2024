@@ -33,19 +33,30 @@ struct TodoListView: View {
                 }
                 .padding(20)
                 
-                List {
-                    ForEach(items) { currentItem in
-                        Label {
-                            Text(currentItem.details)
-                        } icon: {
-                            Image(systemName: currentItem.isCompleted ? "checkmark.circle" : "circle")
-                                .onTapGesture {
-                                    toggle(item: currentItem)
-                                }
+                if items.isEmpty {
+                    ContentUnavailableView(label: {
+                        Label("You're all caught up!", systemImage: "checkmark")
+                            .foregroundStyle(.green)
+                    }, description: {
+                        Text("To-do items will appear here once you add some.")
+                    })
+                } else {
+                    
+                    List {
+                        ForEach(items) { currentItem in
+                            Label {
+                                Text(currentItem.details)
+                            } icon: {
+                                Image(systemName: currentItem.isCompleted ? "checkmark.circle" : "circle")
+                                    .onTapGesture {
+                                        toggle(item: currentItem)
+                                    }
+                            }
                         }
+                        .onDelete(perform: delete)
                     }
-                    .onDelete(perform: delete)
                 }
+                
             }
             .navigationTitle("To do")
         }

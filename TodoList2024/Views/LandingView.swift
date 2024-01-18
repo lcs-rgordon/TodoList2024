@@ -10,7 +10,7 @@ import SwiftUI
 struct LandingView: View {
     
     var body: some View {
-        TabView(selection: .constant(2)) {
+        TabView(selection: .constant(1)) {
             TodoListView()
                 .tabItem {
                     Text("Tasks")

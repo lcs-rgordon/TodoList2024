@@ -12,34 +12,16 @@ import SwiftUI
 struct StatisticsView: View {
     
     // MARK: Stored properties
-    
-    // Fetch all items to show into memory
-    @Query private var items: [TodoItem]
+    @Environment(\.modelContext) var modelContext
+    @State private var completedItemsCount = 0
+    @State private var incompleteItemsCount = 0
 
     // MARK: Computed properties
-    
-    // Status data
-    private var itemCount: (incomplete: Int, complete: Int) {
-        
-        var completedItems = 0
-        for item in items {
-            if item.isCompleted == .yes {
-                completedItems += 1
-            }
-        }
-        
-        return (
-            incomplete: items.count - completedItems,
-            complete: completedItems
-        )
-        
-    }
-    
     // The user interface
     var body: some View {
         NavigationStack {
             Group {
-                if items.isEmpty {
+                if completedItemsCount + incompleteItemsCount == 0 {
                     ContentUnavailableView(label: {
                         Label("No stats available", systemImage: "chart.pie.fill")
                             .foregroundStyle(.green)
@@ -56,26 +38,32 @@ struct StatisticsView: View {
                         }
                         
                         Chart {
-                            SectorMark(
-                                angle: .value("Item", itemCount.complete),
-                                innerRadius: .ratio(0.65),
-                                angularInset: 2.0
-                            )
-                            .foregroundStyle(.green)
-                            .annotation(position: .overlay) {
-                                Text("\(itemCount.complete)")
-                                    .foregroundStyle(.white)
+                            
+                            if completedItemsCount > 0 {
+                                SectorMark(
+                                    angle: .value("Items Completed", completedItemsCount),
+                                    innerRadius: .ratio(0.65),
+                                    angularInset: 2.0
+                                )
+                                .foregroundStyle(.green)
+                                .annotation(position: .overlay) {
+                                    Text("\(completedItemsCount)")
+                                        .foregroundStyle(.white)
+                                }
                             }
-
-                            SectorMark(
-                                angle: .value("Item", itemCount.incomplete),
-                                innerRadius: .ratio(0.65),
-                                angularInset: 2.0
-                            )
-                            .foregroundStyle(.orange)
-                            .annotation(position: .overlay) {
-                                Text("\(itemCount.incomplete)")
-                                    .foregroundStyle(.white)
+                            
+                            if incompleteItemsCount > 0 {
+                                
+                                SectorMark(
+                                    angle: .value("Items Not Completed", incompleteItemsCount),
+                                    innerRadius: .ratio(0.65),
+                                    angularInset: 2.0
+                                )
+                                .foregroundStyle(.orange)
+                                .annotation(position: .overlay) {
+                                    Text("\(incompleteItemsCount)")
+                                        .foregroundStyle(.white)
+                                }
                             }
                         }
                         .chartBackground { proxy in
@@ -92,7 +80,7 @@ struct StatisticsView: View {
                                 .frame(width: 10)
                                 .foregroundStyle(.orange)
                             
-                            Text(Completed.no.rawValue)
+                            Text("No")
                                 .font(.caption)
 
                             Spacer()
@@ -101,7 +89,7 @@ struct StatisticsView: View {
                                 .frame(width: 10)
                                 .foregroundStyle(.green)
                             
-                            Text(Completed.yes.rawValue)
+                            Text("Yes")
                                 .font(.caption)
                             
                             Spacer()
@@ -117,7 +105,18 @@ struct StatisticsView: View {
             }
             .navigationTitle("Statistics")
         }
+        .task {
+            let completedItemsDescriptor = FetchDescriptor<TodoItem>(predicate: #Predicate<TodoItem> { item in
+                item.isCompleted == true
+            })
+            completedItemsCount = (try? modelContext.fetchCount(completedItemsDescriptor)) ?? 0
+            
+            let incompleteItemsDescriptor = FetchDescriptor<TodoItem>(predicate: #Predicate<TodoItem> { item in
+                item.isCompleted == false
+            })
+            incompleteItemsCount = (try? modelContext.fetchCount(incompleteItemsDescriptor)) ?? 0
 
+        }
         
     }
 }

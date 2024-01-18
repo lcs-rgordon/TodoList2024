@@ -8,18 +8,12 @@
 import Foundation
 import SwiftData
 
-// Enum must be set Codable to be stored in SwiftData
-enum Completed: String, Codable {
-    case yes = "yes"
-    case no = "no"
-}
-
 @Model
 class TodoItem: Identifiable {
 
     var details: String
     let createdOn: Date
-    var isCompleted: Completed
+    var isCompleted: Bool
     var completedOn: Date?
 
     // Must provide the details for a to-do item.
@@ -29,7 +23,7 @@ class TodoItem: Identifiable {
     init(
         details: String,
         createdOn: Date = Date(),
-        isCompleted: Completed = .no,
+        isCompleted: Bool = false,
         completedOn: Date? = nil
     ) {
         self.details = details
@@ -50,9 +44,9 @@ extension TodoItem {
         )
         
         // Add mock data
-        container.mainContext.insert(TodoItem(details: "Go for a swim", isCompleted: .no))
-        container.mainContext.insert(TodoItem(details: "Have a nap", isCompleted: .yes))
-        container.mainContext.insert(TodoItem(details: "Study for Physics", isCompleted: .no))
+        container.mainContext.insert(TodoItem(details: "Go for a swim", isCompleted: false))
+        container.mainContext.insert(TodoItem(details: "Have a nap", isCompleted: true))
+        container.mainContext.insert(TodoItem(details: "Study for Physics", isCompleted: false))
 
         return container
     }

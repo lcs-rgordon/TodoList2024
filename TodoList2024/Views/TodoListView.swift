@@ -55,7 +55,7 @@ struct TodoListView: View {
                 
                 if items.isEmpty {
                     ContentUnavailableView(label: {
-                        Label("You're all caught up!", systemImage: "checkmark")
+                        Label("Nothing to do", systemImage: "powersleep")
                             .foregroundStyle(.green)
                     }, description: {
                         Text("To-do items will appear here once you add some.")
